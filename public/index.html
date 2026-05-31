@@ -839,28 +839,29 @@ async function sendMsg() {
   const t = addTyping();
 
   try {
-    const res = await fetch('/api/chat', {
+    const sys = BRAND_INFO + '\n\nINFORMAZIONI SPECIFICHE SU DI ME (' + selected.name + '):\n' + selected.info + '\n\nRispondo in prima persona, con tono elegante e premium.';
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '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',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-request-types': 'DANGEROUS_DIRECT_BROWSER_CALL'
+      },
       body: JSON.stringify({
-        messages: history,
-        productId: selected.id,
-        productName: selected.name,
-        productInfo: selected.info,
-        brandInfo: BRAND_INFO
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        system: sys,
+        messages: history
       })
     });
 
     const data = await res.json();
     t.remove();
 
-    if (data.error) {
-      addMsg('product', `⚠️ ${data.error}`);
-      return;
-    }
-
-    history.push({ role: 'assistant', content: data.reply });
-    addMsg('product', data.reply.replace(/\n/g, '<br>'));
+    const reply = data.content?.[0]?.text ?? 'Non riesco a rispondere in questo momento.';
+    history.push({ role: 'assistant', content: reply });
+    addMsg('product', reply.replace(/\n/g, '<br>'));
 
   } catch(e) {
     t.remove();
