@@ -1,4 +1,4 @@
-# Scicli Selection — Prodotto Parlante
+# Scicli Selection — Prodotto Parlante  
 ## Guida al Deploy su Vercel
 
 ---
