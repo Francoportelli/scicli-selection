@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scicli Selection — Prodotto Parlante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root {
+  --green-deep: #1a3a1a;
+  --green-mid: #2d6a2d;
+  --green-light: #4a9e4a;
+  --green-pale: #d6ead6;
+  --green-wash: #f0f7f0;
+  --gold: #b8943a;
+  --gold-light: #d4b06a;
+  --cream: #faf8f4;
+  --warm-gray: #8a8680;
+  --text-dark: #1a1a18;
+  --text-mid: #4a4a44;
+  --text-light: #8a8880;
+  --border: #e2ddd4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2rem;
+  border-bottom: 0.5px solid var(--border);
+  background: var(--cream);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.nav-logo-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--green-deep);
+  letter-spacing: 0.04em;
+}
+
+.nav-logo-sub {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  background: #ede9e0;
+  border-radius: 24px;
+  padding: 4px;
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.nav-tab.active {
+  background: var(--cream);
+  color: var(--green-deep);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* ── VIEWS ── */
+#admin-view, #chat-view { display: none; }
+#admin-view.show, #chat-view.show { display: block; }
+
+/* ── ADMIN ── */
+.admin-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+.admin-hero {
+  margin-bottom: 2.5rem;
+}
+
+.admin-hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--green-deep);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.admin-hero p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.product-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2rem;
+}
+
+.product-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 24px;
+  padding: 8px 18px;
+  font-size: 12px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.product-pill:hover {
+  border-color: var(--green-mid);
+  color: var(--green-mid);
+}
+
+.product-pill.active {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: white;
+}
+
+.product-pill .pill-emoji {
+  font-size: 15px;
+}
+
+.admin-cols {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.panel {
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+}
+
+.panel-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+.field-group { margin-bottom: 1.25rem; }
+.field-label {
+  font-size: 11px;
+  color: var(--text-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.field-val {
+  font-size: 14px;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.field-val.big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--green-deep);
+}
+
+.divider { height: 0.5px; background: var(--border); margin: 1.25rem 0; }
+
+.param-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.param-name { color: var(--text-light); }
+.param-bar-wrap { width: 80px; height: 4px; background: var(--green-pale); border-radius: 2px; }
+.param-bar { height: 4px; background: var(--green-mid); border-radius: 2px; }
+
+/* QR panel */
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+#qr-box {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 0.5px solid var(--border);
+  display: none;
+}
+
+.qr-url {
+  font-size: 10px;
+  color: var(--text-light);
+  text-align: center;
+  word-break: break-all;
+  max-width: 240px;
+  line-height: 1.5;
+}
+
+.btn-row { display: flex; gap: 8px; margin-top: 0.5rem; }
+
+.btn-outline {
+  flex: 1;
+  background: transparent;
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+}
+
+.btn-outline:hover {
+  border-color: var(--green-mid);
+  color: var(--green-mid);
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--green-deep);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  margin-top: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+/* badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--green-wash);
+  border: 0.5px solid var(--green-pale);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: var(--green-mid);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}
+
+.badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green-light);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ── CHAT VIEW ── */
+#chat-view {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+}
+
+.chat-header {
+  padding: 1.5rem 0 1.25rem;
+  border-bottom: 0.5px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.chat-header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.prod-avatar-lg {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--green-wash), var(--green-pale));
+  border: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.prod-name-lg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--green-deep);
+  line-height: 1.2;
+}
+
+.prod-origin {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+
+.prod-tagline {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 0.75rem;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--warm-gray);
+}
+
+/* messages */
+#chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 320px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding: 4px 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.msg {
+  max-width: 82%;
+  font-size: 13.5px;
+  line-height: 1.65;
+  animation: fadeUp 0.28s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg.product {
+  align-self: flex-start;
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 3px 16px 16px 16px;
+  padding: 12px 16px;
+  color: var(--text-dark);
+}
+
+.msg.user {
+  align-self: flex-end;
+  background: var(--green-deep);
+  border-radius: 16px 16px 3px 16px;
+  padding: 12px 16px;
+  color: white;
+  font-weight: 400;
+}
+
+.msg.typing {
+  align-self: flex-start;
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 3px 16px 16px 16px;
+  padding: 14px 18px;
+}
+
+.dots { display: flex; gap: 5px; }
+.dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  animation: bounce 0.85s infinite;
+}
+.dots span:nth-child(2) { animation-delay: .16s; }
+.dots span:nth-child(3) { animation-delay: .32s; }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-5px)} }
+
+/* suggested questions */
+.sq-area {
+  padding: 0.75rem 0 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sq {
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.sq:hover {
+  border-color: var(--green-mid);
+  color: var(--green-mid);
+  background: var(--green-wash);
+}
+
+/* input */
+.chat-input-wrap {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#user-input {
+  flex: 1;
+  background: white;
+  border: 0.5px solid var(--border);
+  border-radius: 26px;
+  padding: 12px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.18s;
+}
+
+#user-input::placeholder { color: var(--text-light); }
+#user-input:focus { border-color: var(--green-mid); }
+
+#send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--green-deep);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+#send-btn:hover { opacity: 0.82; }
+
+#send-btn svg {
+  width: 17px; height: 17px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.powered {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 1.25rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .nav { padding: 1rem 1.25rem; }
+  .admin-wrap { padding: 1.5rem 1.25rem; }
+  .admin-cols { grid-template-columns: 1fr; }
+  .admin-hero h1 { font-size: 1.7rem; }
+  #chat-view { padding: 0 1rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <span class="nav-logo-main">Scicli Selection</span>
+    <span class="nav-logo-sub">Ortaggi Progettati</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchView('admin')">Dashboard</button>
+    <button class="nav-tab" onclick="switchView('chat')">Chat Prodotto</button>
+  </div>
+</nav>
+
+<!-- ADMIN -->
+<div id="admin-view" class="show">
+  <div class="admin-wrap">
+
+    <div class="admin-hero">
+      <div class="badge"><div class="badge-dot"></div>Sistema attivo</div>
+      <h1>Prodotto Parlante<br><em style="font-style:italic;font-weight:300">Scicli Selection</em></h1>
+      <p>Seleziona un prodotto, genera il QR code e stampalo sulla confezione.<br>I clienti scansionano e chattano direttamente con il prodotto.</p>
+    </div>
+
+    <div class="product-pills" id="product-pills"></div>
+
+    <div class="admin-cols">
+      <div class="panel">
+        <div class="panel-label">Identità prodotto selezionato</div>
+
+        <div class="field-group">
+          <span class="field-label">Nome</span>
+          <div class="field-val big" id="d-name">—</div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">Linea sensoriale</span>
+          <div class="field-val" id="d-linea">—</div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">Territorio</span>
+          <div class="field-val">Scicli, Sicilia Sud Orientale</div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="panel-label">Parametri sensoriali</div>
+        <div id="d-params"></div>
+
+        <div class="divider"></div>
+        <div class="panel-label">Domande suggerite</div>
+        <div id="d-qs" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-label">QR Code prodotto</div>
+          <div class="qr-section">
+            <div id="qr-box"></div>
+            <div class="qr-url" id="qr-url-label">Genera il QR per questo prodotto</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-outline" onclick="generateQR()">⬛ Genera QR</button>
+            <button class="btn-outline" id="dl-btn" onclick="downloadQR()" disabled>↓ Scarica</button>
+          </div>
+          <button class="btn-primary" onclick="switchView('chat')">▶ Apri chat prodotto</button>
+        </div>
+
+        <div class="panel" style="margin-top:1rem">
+          <div class="panel-label">Costo stimato per conversazione</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:0.5rem">
+            <div style="background:var(--green-wash);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Per utente</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--green-deep)">~€0,004</div>
+            </div>
+            <div style="background:var(--green-wash);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">1.000 utenti</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--green-deep)">~€4</div>
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--text-light);margin-top:10px;line-height:1.6">Modello Claude Haiku. 5 domande medie per utente. I primi $5 di crediti Anthropic coprono ~1.250 conversazioni.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat-view">
+  <div class="chat-header">
+    <div class="chat-header-top">
+      <div class="prod-avatar-lg" id="chat-avatar"></div>
+      <div>
+        <div class="prod-name-lg" id="chat-name">—</div>
+        <div class="prod-origin">Scicli, Sicilia Sud Orientale · Orto Magico di Scicli</div>
+      </div>
+    </div>
+    <div class="prod-tagline" id="chat-tagline">Ortaggi progettati. Sapore garantito.</div>
+  </div>
+
+  <div id="chat-messages"></div>
+  <div class="sq-area" id="sq-area"></div>
+
+  <div class="chat-input-wrap">
+    <input id="user-input" placeholder="Chiedimi qualcosa…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button id="send-btn" onclick="sendMsg()" aria-label="Invia">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+  <div class="powered">Powered by Scicli Selection AI · Orto Magico di Scicli</div>
+</div>
+
+<script>
+const BRAND_INFO = `Sei un ortaggio premium della linea SCICLI SELECTION — ortaggi progettati dal territorio di Scicli, in Sicilia Sud Orientale.
+
+Parla sempre in prima persona come se fossi il prodotto stesso. Usa un tono elegante, sensoriale, premium e concreto. Valorizza sempre il territorio di Scicli e la selezione rigorosa di Staff Scicli Selection e Orto Magico di Scicli.
+
+IDENTITÀ BRAND:
+Scicli Selection è una linea premium di ortaggi progettati per offrire un profilo sensoriale preciso, misurabile e ripetibile. Non vende semplicemente ortaggi: vende certezza. Certezza del gusto, della consistenza, della resa in cucina e dell'origine. Ogni prodotto nasce nel territorio di Scicli, caratterizzato da sole intenso, ventilazione marina, escursione termica, terreni minerali e tradizione agricola specializzata. Ogni lotto viene controllato da Staff Scicli Selection e Orto Magico di Scicli. Solo i prodotti che rispettano parametri sensoriali rigorosi entrano nella linea.
+
+MICROCLIMA DI SCICLI:
+Sole intenso che favorisce maturazione e concentrazione aromatica. Brezza marina che protegge le colture. Escursione termica che concentra zuccheri e aromi. Terreni minerali che donano profondità gustativa. Umidità naturalmente regolata dal mare.
+
+PAROLE DA USARE: territorio di Scicli, microclima unico, Sicilia Sud Orientale, Staff Scicli Selection, Orto Magico di Scicli, lotto controllato, selezione rigorosa, profilo sensoriale, dolcezza naturale, acidità elegante, croccantezza, consistenza, resa gastronomica, qualità costante, dieta mediterranea, valore nutraceutico, antiossidanti naturali, esperienza premium.
+
+PAROLE DA EVITARE: economico, normale, comune, standard, semplice ortaggio, cura, guarisce, previene malattie, effetto medico, miracoloso.
+
+Non fare promesse mediche assolute. Collegare sempre il prodotto a sapore, resa gastronomica, dieta mediterranea e valore nutraceutico.`;
+
+const PRODUCTS = [
+  {
+    id:"datterino", emoji:"🍅",
+    name:"Pomodoro Datterino Scicli Dolce",
+    linea:"Scicli Dolce — dolcezza naturale, morbido, solare",
+    tagline:"Dolcezza naturale del territorio di Scicli.",
+    params:[{n:"Dolcezza",v:95},{n:"Acidità",v:35},{n:"Succosità",v:85},{n:"Resa cottura",v:70}],
+    qs:["Che sapore hai?","Come ti uso in cucina?","Perché sei diverso da un datterino normale?","Sei adatto alla dieta?"],
+    info:`Sono il Pomodoro Datterino Scicli Dolce, il prodotto simbolo della dolcezza naturale del territorio di Scicli. Ogni lotto viene controllato da Staff Scicli Selection e Orto Magico di Scicli per garantire dolcezza elevata con °Brix minimo garantito, acidità equilibrata, consistenza controllata, pelle sottile, succosità elegante. Sapore dolce, morbido, solare e avvolgente. Il finale richiama miele vegetale, erbe mediterranee e macchia siciliana. Proprietà nutritive: acqua, fibre leggere, vitamina C, potassio, carotenoidi, licopene, antiossidanti naturali. Usi ideali: consumo crudo, insalate premium, caprese, bruschette, antipasti gourmet, datterino confit, abbinamenti dolce-salato, piatti con burrata, pesce crudo, ricotta salata, aceto di Modica, basilico fresco.`
+  },
+  {
+    id:"grappolo", emoji:"🍅",
+    name:"Pomodoro Grappolo Scicli Carattere",
+    linea:"Scicli Carattere — intensità, acidità vibrante, struttura",
+    tagline:"Carattere e persistenza aromatica dalla Sicilia.",
+    params:[{n:"Dolcezza",v:55},{n:"Acidità",v:85},{n:"Consistenza",v:90},{n:"Resa cottura",v:95}],
+    qs:["Che sapore hai?","Sei buono in cottura?","Perché ti chiami Carattere?","Che proprietà nutrizionali hai?"],
+    info:`Sono il Pomodoro Grappolo Scicli Carattere, pensato per chi cerca intensità, acidità vibrante e struttura gastronomica. Ogni lotto controllato da Staff Scicli Selection e Orto Magico per acidità precisa, dolcezza equilibrata, consistenza alta, grande tenuta, resa in cucina, persistenza aromatica. Sapore intenso, fresco, vibrante e persistente. L'ingresso è vivace, l'acidità elegante, la struttura importante, il finale lungo e gastronomico. Non cerco neutralità: cerco carattere. Proprietà nutritive: acqua, fibre vegetali, vitamina C, potassio, licopene, polifenoli, carotenoidi, antiossidanti naturali. Usi ideali: sughi premium, salse intense, piatti caldi, cucina professionale, preparazioni mediterranee con olive, acciughe, pecorino ed erbe aromatiche.`
+  },
+  {
+    id:"zucchina-eq", emoji:"🥒",
+    name:"Zucchina Verde Scicli Equilibrio",
+    linea:"Scicli Equilibrio — stabilità, croccantezza, resa",
+    tagline:"Freschezza prevedibile. Leggerezza mediterranea.",
+    params:[{n:"Croccantezza",v:75},{n:"Tenuta cottura",v:80},{n:"Freschezza",v:90},{n:"Leggerezza",v:95}],
+    qs:["Che sapore hai?","Sei adatta a una dieta leggera?","Come mi consigli di cucinarti?","Perché sei diversa dalle altre zucchine?"],
+    info:`Sono la Zucchina Verde Scicli Equilibrio, progettata per offrire stabilità, croccantezza e resa gastronomica. Ogni lotto controllato da Staff Scicli Selection e Orto Magico per croccantezza medio-alta, resa in cottura, tenuta, colore, freschezza, comportamento gastronomico stabile. Sapore pulito, fresco, delicato e bilanciato. Non sono acquosa, non mi sfaldo, mantengo consistenza, resto elegante anche dopo la cottura. Proprietà nutritive: leggera, ricca di acqua vegetale, fibre delicate, potassio, magnesio. Basso apporto calorico. Usi ideali: griglia, padella, wok, vellutate, contorni leggeri, piatti con pesce, ricette con limone e menta, preparazioni professionali.`
+  },
+  {
+    id:"zucchina-car", emoji:"🥒",
+    name:"Zucchina Verde Scicli Carattere",
+    linea:"Scicli Carattere — alta croccantezza, morso netto",
+    tagline:"Struttura e presenza. Per chi cucina con intenzione.",
+    params:[{n:"Croccantezza",v:95},{n:"Tenuta cottura",v:92},{n:"Struttura",v:90},{n:"Leggerezza",v:80}],
+    qs:["Perché hai 'carattere'?","A chi sei consigliata?","Come mi comporto in cottura?","Hai benefici nutrizionali?"],
+    info:`Sono la Zucchina Verde Scicli Carattere, la versione più intensa, croccante e strutturata della linea. Ogni lotto controllato da Staff Scicli Selection e Orto Magico per alta croccantezza, grande tenuta, struttura importante, precisione sensoriale, performance in cottura. Non sono una zucchina neutra. Ho morso netto, struttura e presenza gastronomica. In un piatto caldo, in un wok, alla piastra o in una ricetta contemporanea, mantengo identità. Proprietà nutritive: acqua vegetale, fibre leggere, potassio, magnesio, vitamina C, composti vegetali naturali. Usi ideali: cotture veloci, cucina contemporanea, wok, piastra. Adatta sia a chef sia a consumatori evoluti.`
+  },
+  {
+    id:"peperone", emoji:"🫑",
+    name:"Peperone Rosso Scicli Dolce",
+    linea:"Scicli Dolce — dolcezza, polpa piena, aromaticità",
+    tagline:"Sole mediterraneo concentrato in ogni morso.",
+    params:[{n:"Dolcezza",v:90},{n:"Aromaticità",v:88},{n:"Polpa",v:85},{n:"Vitamina C",v:95}],
+    qs:["Perché sei dolce?","Che sapore hai?","Sono importante nella dieta?","Come mi puoi usare?"],
+    info:`Sono il Peperone Rosso Scicli Dolce, selezionato per dolcezza naturale, polpa piena e aromaticità. Ogni lotto controllato da Staff Scicli Selection e Orto Magico per dolcezza alta, croccantezza media, polpa piena, profilo morbido, aromaticità intensa, maturazione controllata. Sapore dolce, pieno, morbido e aromatico. La polpa è consistente e vellutata. Il profumo richiama il peperone arrostito tradizionale. Il finale può ricordare frutta rossa matura e sole mediterraneo. Sono dolce perché il sole di Scicli aiuta lo sviluppo degli zuccheri naturali. Proprietà nutritive: naturalmente ricco di vitamina C, beta-carotene, flavonoidi, antiossidanti naturali, fibre, acqua vegetale. Usi ideali: arrostitura, creme, vellutate, salse, peperoni marinati, piatti con tonno, abbinamenti con mandorla, ricotta, agrumi, menta, olio extravergine.`
+  },
+  {
+    id:"melanzana", emoji:"🍆",
+    name:"Melanzana Lunga Scicli Equilibrio",
+    linea:"Scicli Equilibrio — resa, tenuta, umidità controllata",
+    tagline:"Polpa compatta. Cucina senza sorprese.",
+    params:[{n:"Resa cottura",v:92},{n:"Tenuta",v:88},{n:"Compattezza",v:85},{n:"Equilibrio",v:90}],
+    qs:["Che tipo di melanzana sei?","Perché sei diversa?","Hai proprietà nutraceutiche?","Come mi cucini al meglio?"],
+    info:`Sono la Melanzana Lunga Scicli Equilibrio, selezionata per resa, tenuta, umidità controllata e comportamento gastronomico. Ogni lotto controllato da Staff Scicli Selection e Orto Magico per alta resa in cottura, tenuta medio-alta, umidità controllata, polpa compatta, struttura stabile, equilibrio gastronomico. La polpa è compatta, la texture elegante, la struttura resta stabile. Assorbo bene senza diventare pesante. Una melanzana comune può assorbire troppo olio, perdere consistenza o diventare acquosa. Scicli Equilibrio garantisce umidità più gestibile, migliore tenuta, resa stabile, struttura compatta. Proprietà nutritive: fibre, composti fenolici, antociani nella buccia viola con funzione antiossidante, minerali vegetali, acqua vegetale. Usi ideali: forno, griglia, cubi glassati, creme di melanzana, preparazioni con pomodoro, ricette con miele e aceto, cucina gourmet. Si abbina con pomodoro premium, erbe mediterranee, formaggi stagionati, miele, miso, olio extravergine.`
+  }
+];
+
+let selected = PRODUCTS[0];
+let history = [];
+
+// Init product pills
+const pillsWrap = document.getElementById('product-pills');
+PRODUCTS.forEach(p => {
+  const btn = document.createElement('button');
+  btn.className = 'product-pill' + (p.id === selected.id ? ' active' : '');
+  btn.innerHTML = `<span class="pill-emoji">${p.emoji}</span>${p.name.replace('Scicli ','').replace('Scicli Selection ','')}`;
+  btn.onclick = () => selectProduct(p);
+  pillsWrap.appendChild(btn);
+});
+
+loadAdminPanel();
+
+function selectProduct(p) {
+  selected = p;
+  document.querySelectorAll('.product-pill').forEach((b,i) => {
+    b.classList.toggle('active', PRODUCTS[i].id === p.id);
+  });
+  loadAdminPanel();
+  document.getElementById('qr-box').innerHTML = '';
+  document.getElementById('qr-box').style.display = 'none';
+  document.getElementById('qr-url-label').textContent = 'Genera il QR per questo prodotto';
+  document.getElementById('dl-btn').disabled = true;
+}
+
+function loadAdminPanel() {
+  document.getElementById('d-name').textContent = selected.name;
+  document.getElementById('d-linea').textContent = selected.linea;
+
+  const paramsEl = document.getElementById('d-params');
+  paramsEl.innerHTML = selected.params.map(p => `
+    <div class="param-row">
+      <span class="param-name">${p.n}</span>
+      <div class="param-bar-wrap"><div class="param-bar" style="width:${p.v}%"></div></div>
+    </div>`).join('');
+
+  const qsEl = document.getElementById('d-qs');
+  qsEl.innerHTML = selected.qs.map(q =>
+    `<div style="font-size:12px;color:var(--text-mid);padding:5px 0;border-bottom:0.5px solid var(--border)">${q}</div>`
+  ).join('');
+}
+
+function generateQR() {
+  const box = document.getElementById('qr-box');
+  box.innerHTML = '';
+  const url = window.location.href.split('?')[0] + '?p=' + selected.id;
+  document.getElementById('qr-url-label').textContent = url;
+  new QRCode(box, { text: url, width: 180, height: 180, colorDark: '#1a3a1a', colorLight: '#ffffff' });
+  box.style.display = 'block';
+  document.getElementById('dl-btn').disabled = false;
+}
+
+function downloadQR() {
+  const canvas = document.querySelector('#qr-box canvas');
+  if (!canvas) return;
+  const a = document.createElement('a');
+  a.download = 'qr-' + selected.id + '.png';
+  a.href = canvas.toDataURL();
+  a.click();
+}
+
+function switchView(v) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', (v==='admin'&&i===0)||(v==='chat'&&i===1)));
+  document.getElementById('admin-view').className = v === 'admin' ? 'show' : '';
+  document.getElementById('chat-view').className = v === 'chat' ? 'show' : '';
+  if (v === 'chat') openChat();
+}
+
+function openChat() {
+  document.getElementById('chat-avatar').textContent = selected.emoji;
+  document.getElementById('chat-name').textContent = selected.name;
+  document.getElementById('chat-tagline').textContent = selected.tagline;
+  history = [];
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = '';
+  addMsg('product', `Ciao! Sono <strong>${selected.name}</strong>.<br>Nasco nel territorio di Scicli, selezionato da Staff Scicli Selection e Orto Magico di Scicli. Cosa vuoi sapere su di me?`);
+  renderSQ();
+}
+
+function renderSQ() {
+  const area = document.getElementById('sq-area');
+  area.innerHTML = '';
+  selected.qs.forEach(q => {
+    const b = document.createElement('button');
+    b.className = 'sq';
+    b.textContent = q;
+    b.onclick = () => { document.getElementById('user-input').value = q; sendMsg(); };
+    area.appendChild(b);
+  });
+}
+
+function addMsg(type, html) {
+  const msgs = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'msg ' + type;
+  d.innerHTML = html;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+function addTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'msg typing';
+  d.id = 'typing';
+  d.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('user-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  document.getElementById('sq-area').innerHTML = '';
+  addMsg('user', text);
+  history.push({ role: 'user', content: text });
+  const t = addTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: history,
+        productId: selected.id,
+        productName: selected.name,
+        productInfo: selected.info,
+        brandInfo: BRAND_INFO
+      })
+    });
+
+    const data = await res.json();
+    t.remove();
+
+    if (data.error) {
+      addMsg('product', `⚠️ ${data.error}`);
+      return;
+    }
+
+    history.push({ role: 'assistant', content: data.reply });
+    addMsg('product', data.reply.replace(/\n/g, '<br>'));
+
+  } catch(e) {
+    t.remove();
+    addMsg('product', 'Errore di connessione. Riprova tra un momento.');
+  }
+}
+
+// Auto-apri prodotto da URL param
+const urlP = new URLSearchParams(window.location.search).get('p');
+if (urlP) {
+  const found = PRODUCTS.find(p => p.id === urlP);
+  if (found) { selected = found; switchView('chat'); }
+}
+</script>
+</body>
+</html>
