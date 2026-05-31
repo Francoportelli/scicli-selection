@@ -1,1 +1,2 @@
 
+{"version":2,"builds":[{"src":"API/chat.js","use":"@vercel/node"},{"src":"pubblico/index.html","use":"@vercel/static"}],"routes":[{"src":"/api/(.*)","dest":"/API/$1"},{"src":"/(.*)","dest":"/pubblico/$1"}]}
